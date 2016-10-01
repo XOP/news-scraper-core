@@ -1,6 +1,6 @@
 {
   "name": "news-scraper-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "core module for the NewScraper",
   "main": "index.js",
   "scripts": {

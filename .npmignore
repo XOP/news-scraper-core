@@ -10,3 +10,9 @@
 .editorconfig
 .eslintrc
 .babelrc
+
+
+
+# misc
+
+.idea
