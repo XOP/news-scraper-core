@@ -1,0 +1,16 @@
+{
+  "extends": "xop",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "impliedStrict": true
+    }
+  },
+  "env": {
+    "node": true
+  },
+  "rules": {
+
+  }
+}

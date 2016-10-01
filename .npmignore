@@ -1,0 +1,12 @@
+# es6 code and tests
+
+/tests
+/src
+
+
+
+# config
+
+.editorconfig
+.eslintrc
+.babelrc

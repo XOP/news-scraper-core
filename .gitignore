@@ -1,0 +1,11 @@
+# environment
+
+node_modules
+.idea
+/*.log
+
+
+
+# js compilation
+
+/lib
