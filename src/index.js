@@ -5,7 +5,7 @@ import limitData from './limit-data.js';
 import refineData from './refine-data.js';
 import compareData from './compare-data.js';
 
-import log from '../utils/log-wrapper.js';
+import log from './utils/log-wrapper.js';
 
 const scraper = (directives, cfg, debugStage = '') => {
 
