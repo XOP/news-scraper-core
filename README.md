@@ -80,30 +80,38 @@ Example:
 
 `title`  
 String  
-name of the resource, **required**
+Name of the resource, **required**
 
 `url`  
-url of the resource, **required**
+String  
+Url of the resource, **required**
 
 `elem`  
+String  
 CSS selector of the news item container element, **required**
 
 `link`  
+String  
 CSS selector of the link (<a href="">...</a>) _inside_ of the `elem`
 If the `elem` itself _is_ a link, this is not required
 
 `author`  
+String  
 CSS selector of the author element _inside_ of the `elem`
 
 `time`  
+String  
 CSS selector of the time element _inside_ of the `elem`
 
 `image`  
+String  
 CSS selector of the image element _inside_ of the `elem`
 This one can be `img` tag or any other - NewScraper will search for `data-src` and `background-image` CSS properties to find proper image data
 
 `limit`  
-how many `elem`-s from the `url` will be scraped, maximum
+Number  
+How many `elem`-s from the `url` will be scraped, maximum  
+See also: [Config -> limit](#config)
 
 
 ### Output
