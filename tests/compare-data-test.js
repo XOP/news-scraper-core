@@ -9,7 +9,9 @@ var compareData = require('../lib/compare-data.js');
 var dataPath = path.resolve(__dirname, 'fixtures/compare');
 
 var objData = {
-    meta: {},
+    meta: {
+        date: 1
+    },
     pages: [
         {
             title: 'testData',
@@ -35,7 +37,9 @@ var objData = {
 };
 
 var objDataBig = {
-    meta: {},
+    meta: {
+        date: 1
+    },
     pages: [
         {
             title: 'testData',
@@ -81,7 +85,9 @@ var objDataBig = {
 };
 
 var objDataDiff = {
-    meta: {},
+    meta: {
+        date: 1
+    },
     pages: [
         {
             title: 'testData2',
@@ -113,10 +119,26 @@ function cleanup (marker) {
         })
         .forEach(function (name) {
             del(path.join(dataPath, name));
+
+            console.log('test cleanup: file ' + name + ' is deleted');
         });
 }
 
 test('Compare data test', function (t) {
+
+    //
+    // strategy == '' (bypass)
+
+    // will not create any data file
+    // should simply augment the meta with the filename
+
+    t.deepEqual(
+        compareData(objData, dataPath, 'data.json', '').pages,
+        objData.pages,
+
+        'Strategy = ""; Should return the same data'
+    );
+
 
     //
     // strategy == scratch
@@ -128,7 +150,7 @@ test('Compare data test', function (t) {
         compareData(objData, dataPath, 'data.json', 'scratch').pages,
         objData.pages,
 
-        'Should return the same data'
+        'Strategy = "scratch"; Should return the same data'
     );
 
     // find the only data file created
@@ -140,7 +162,7 @@ test('Compare data test', function (t) {
         fs.readJsonSync(path.join(dataPath, dataFile), 'utf8'),
         objData,
 
-        'Should create file with corresponding JSON data'
+        'Strategy = "scratch"; Should create file with corresponding JSON data'
     );
 
     cleanup(1);
@@ -156,7 +178,7 @@ test('Compare data test', function (t) {
         compareData(objData, dataPath, 'test-data.json', 'compare'),
         objData,
 
-        'Should create a json file with the data if no current data present'
+        'Strategy = "compare"; Should create a json file with the data if no current data present'
     );
 
     cleanup('test');
@@ -170,7 +192,7 @@ test('Compare data test', function (t) {
         compareData(objData, dataPath, 'data.json', 'compare').pages,
         [],
 
-        'Should return empty array when compared to the equal data'
+        'Strategy = "compare"; Should return empty array when compared to the equal data'
     );
 
 
@@ -185,7 +207,7 @@ test('Compare data test', function (t) {
         fs.readJsonSync(path.join(dataPath, 'data-copy.json'), 'utf8').pages,
         objDataDiff.pages,
 
-        'Should overwrite a json with the new piece of data'
+        'Strategy = "compare"; Should overwrite a json with the new piece of data'
     );
 
     cleanup('copy');

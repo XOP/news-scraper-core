@@ -3,8 +3,9 @@ var test = require('tape');
 var fetchPage = require('../lib/fetch-page.js');
 
 var props = {
-    url: 'https://css-tricks.com/',
-    elem: '#page-wrap .main-col .article-card > h2 > a.read-article'
+    url: 'http://ponyfoo.com/',
+    elem: '.aa-article',
+    link: 'h2.aa-title > a'
 };
 
 test('Fetch page test', function (t) {
