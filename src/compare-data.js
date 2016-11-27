@@ -14,6 +14,8 @@ const compareData = (complexData, outputPath = './', currentOutput = 'data.json'
         pages
         } = complexData;
 
+    const currentDate = meta.date;
+
     if (!pages) {
         log.error('No pages data provided. Check parseData params.');
         process.exit(1);
@@ -30,13 +32,11 @@ const compareData = (complexData, outputPath = './', currentOutput = 'data.json'
     log.debug('new pages', pages);
 
     const currentDataPath = path.resolve(outputPath, currentOutput);
-    const currentDate = new Date().getTime();
     const dataFileName = path.join(outputPath, `${currentDate}.json`);
 
     let updatedComplexData = {
         meta: Object.assign(meta, {
-            file: dataFileName,
-            date: currentDate
+            file: dataFileName
         }),
         pages
     };

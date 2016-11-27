@@ -2,7 +2,7 @@ import is from 'is';
 
 import log from './utils/log-wrapper.js';
 
-const limitData = (pages, defaultLimit) => {
+const limitData = (pages, defaultLimit = 5) => {
     if (!defaultLimit) {
         log.warn('No limit provided. The data will not be modified.');
     }

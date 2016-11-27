@@ -51,7 +51,11 @@ const scraper = (directives, cfg, debugStage = '') => {
         .then(refinedData => {
             log.debug('refined data', refinedData);
 
-            return compareData(refinedData, cfg.output.path, cfg.output.current, cfg.updateStrategy);
+            if (typeof cfg.updateStrategy !== 'undefined') {
+                return compareData(refinedData, cfg.output.path, cfg.output.current, cfg.updateStrategy);
+            } else {
+                return refinedData;
+            }
         })
         .catch(err => {
             log.error(err);

@@ -23,7 +23,34 @@ NewScraper is designed to be used as a **middleware** for a server / hybrid / CL
 
 ### Config
 
-> todo
+`limit`      
+Number, default: 5  
+Defines the default common limit; will be overwritten by [Input -> limit](#input)
+
+`output` - **server only**
+Object:
+```
+{ 
+    path,
+    current
+}
+```
+
+`output.path`  
+String, default: "./"  
+Path to the scraped data directory
+
+`output.current`
+String, default: "data.json"  
+Path to the current data json file (used to filter previously shown news)
+
+`updateStrategy` - **server only**
+String, default: ""  
+Defines logic of the post-processing the scraped data:  
+`"scratch"` - ignores previous runs, creates new json file every new scraping round  
+`"compare"` - compares scraping results to the previous result, stores in `output.current` file (data.json by default)  
+`""` - bypass, no scraping results saved
+
 
 
 ### Input
@@ -52,6 +79,7 @@ Example:
 ```
 
 `title`  
+String  
 name of the resource, **required**
 
 `url`  

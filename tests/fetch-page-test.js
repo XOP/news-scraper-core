@@ -3,7 +3,7 @@ var test = require('tape');
 var fetchPage = require('../lib/fetch-page.js');
 
 var props = {
-    url: 'http://css-tricks.com/',
+    url: 'https://css-tricks.com/',
     elem: '#page-wrap .main-col .article-card > h2 > a.read-article'
 };
 

@@ -143,7 +143,9 @@ const refineData = (pages) => {
     log.verbose('Refining operation complete');
 
     return {
-        meta: {},
+        meta: {
+            date: new Date().getTime()
+        },
         pages: refinedData
     };
 };
