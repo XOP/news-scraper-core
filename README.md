@@ -27,7 +27,7 @@ NewScraper is designed to be used as a **middleware** for a server / hybrid / CL
 Number, default: 5  
 Defines the default common limit; will be overwritten by [Input -> limit](#input)
 
-`output` - **server only**
+`output`  
 Object:
 ```
 { 
@@ -44,7 +44,7 @@ Path to the scraped data directory
 String, default: "data.json"  
 Path to the current data json file (used to filter previously shown news)
 
-`updateStrategy` - **server only**
+`updateStrategy`  
 String, default: ""  
 Defines logic of the post-processing the scraped data:  
 `"scratch"` - ignores previous runs, creates new json file every new scraping round  
