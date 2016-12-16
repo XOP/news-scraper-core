@@ -2,9 +2,9 @@ import is from 'is';
 
 import log from './utils/log-wrapper.js';
 
-const limitData = (pages, defaultLimit = 5) => {
-    if (!defaultLimit) {
-        log.warn('No limit provided. The data will not be modified.');
+const limitData = (pages, appLimit) => {
+    if (!appLimit) {
+        log.verbose('No limit provided. The data will not be modified.');
     }
 
     if (!pages) {
@@ -17,7 +17,7 @@ const limitData = (pages, defaultLimit = 5) => {
         process.exit(1);
     }
 
-    if (!is.number(parseInt(defaultLimit, 10))) {
+    if (!is.number(parseInt(appLimit, 10))) {
         log.error('Limit type is not Number. Exiting...');
         process.exit(1);
     }
@@ -31,7 +31,7 @@ const limitData = (pages, defaultLimit = 5) => {
     log.verbose('Now limiting the links number...');
 
     pages.forEach(page => {
-        const limit = page.limit || defaultLimit;
+        const limit = appLimit || page.limit;
 
         log.debug('page data', page.data);
 

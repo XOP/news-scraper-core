@@ -24,8 +24,8 @@ NewScraper is designed to be used as a **middleware** for a server / hybrid / CL
 ### Config
 
 `limit`      
-Number, default: 5  
-Defines the default common limit; will be overwritten by [Input -> limit](#input)
+Number, default: `undefined` (bypass)  
+Defines the default common limit; will overwrite directive's [Input -> limit](#input)
 
 `output`  
 Object:
