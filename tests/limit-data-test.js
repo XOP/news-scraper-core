@@ -5,7 +5,7 @@ var limitData = require('../lib/limit-data.js');
 var scrapedData = [];
 
 //
-// hardcoded limit value = 5
+// data without changes
 //
 
 test('Source object limit links test', function (t) {
@@ -38,12 +38,14 @@ test('Source object limit links test', function (t) {
                     '<a href="#1-2">Link 1-2</a>',
                     '<a href="#1-3">Link 1-3</a>',
                     '<a href="#1-4">Link 1-4</a>',
-                    '<a href="#1-5">Link 1-5</a>'
+                    '<a href="#1-5">Link 1-5</a>',
+                    '<a href="#1-6">Link 1-6</a>',
+                    '<a href="#1-7">Link 1-7</a>'
                 ]
             }
         ],
 
-        'Should return limited links using default hardcoded value'
+        'Should return the same data'
     );
 
     //
@@ -83,23 +85,6 @@ test('Source object limit links test', function (t) {
     ];
 
     t.deepEqual(
-        limitData(scrapedData, 3),
-
-        [
-            {
-                title: 'Title 1',
-                data: [
-                    '<a href="#1-1">Link 1-1</a>',
-                    '<a href="#1-2">Link 1-2</a>'
-                ],
-                limit: 2
-            }
-        ],
-
-        'Should return limited links using individual setting ignoring general limit'
-    );
-
-    t.deepEqual(
         limitData(scrapedData),
 
         [
@@ -113,7 +98,38 @@ test('Source object limit links test', function (t) {
             }
         ],
 
-        'Should return limited links using individual setting ignoring default limit'
+        'Should return limited links using directive setting'
+    );
+
+    scrapedData = [
+        {
+            title: 'Title 1',
+            data: [
+                '<a href="#1-1">Link 1-1</a>',
+                '<a href="#1-2">Link 1-2</a>',
+                '<a href="#1-3">Link 1-3</a>',
+                '<a href="#1-4">Link 1-4</a>'
+            ],
+            limit: 2
+        }
+    ];
+
+    t.deepEqual(
+        limitData(scrapedData, 3),
+
+        [
+            {
+                title: 'Title 1',
+                data: [
+                    '<a href="#1-1">Link 1-1</a>',
+                    '<a href="#1-2">Link 1-2</a>',
+                    '<a href="#1-3">Link 1-3</a>'
+                ],
+                limit: 2
+            }
+        ],
+
+        'Should return limited links using general setting ignoring directive limit'
     );
 
     //
