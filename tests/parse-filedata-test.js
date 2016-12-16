@@ -8,7 +8,7 @@ var parseFileData = require('../lib/utils/parse-filedata.js');
 var data;
 var dataPath = path.resolve(__dirname, 'fixtures/data');
 
-test('Parse file test', function (t) {
+test('Parse filedata test', function (t) {
 
     data = fs.readFileSync(path.join(dataPath, 'data.json'), 'utf8');
 

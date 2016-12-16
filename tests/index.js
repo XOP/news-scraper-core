@@ -8,5 +8,4 @@ require('./compare-data-test');
 /* utils */
 require('./extract-format-test');
 require('./parse-filedata-test');
-
-// todo: require('./parse-file-test');
+require('./parse-file-test');
