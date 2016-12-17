@@ -51,6 +51,10 @@ Defines logic of the post-processing the scraped data:
 `"compare"` - compares scraping results to the previous result, stores in `output.current` file (data.json by default)  
 `""` - bypass, no scraping results saved
 
+`scraperOptions`  
+Object, default: {}  
+Parameters to pass to the currently used scraper.  
+Version 1.x - [Nightmare](http://www.nightmarejs.org/), find all options [here](https://github.com/segmentio/nightmare#api).
 
 
 ### Input
@@ -163,6 +167,10 @@ Example:
     ]
 ```
 
+
+## Events
+
+:construction: coming up!
 
 
 ## [MIT License](LICENSE)

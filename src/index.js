@@ -1,3 +1,4 @@
+import events from 'events';
 import Promise from 'bluebird';
 
 import fetchPage from './fetch-page.js';
@@ -7,10 +8,15 @@ import compareData from './compare-data.js';
 
 import log from './utils/log-wrapper.js';
 
+const ScraperEmitter = events.EventEmitter;
+
 const scraper = (directives, cfg, debugStage = '') => {
+    const emitter = new ScraperEmitter();
 
     // fetch page data
-    const scrapedData = Promise.mapSeries(directives, fetchPage);
+    const scrapedData = Promise.mapSeries(directives, (directive) => {
+        return fetchPage(directive, cfg.scraperOptions, emitter);
+    });
 
     if (debugStage === 'data') {
         return;
@@ -19,6 +25,7 @@ const scraper = (directives, cfg, debugStage = '') => {
     // limit data
     const limitedData = scrapedData
         .then(scrapedData => {
+            emitter.emit('scrapingDone', scrapedData);
             log.debug('scraped data', scrapedData);
 
             return limitData(scrapedData, cfg.limit);
@@ -34,6 +41,7 @@ const scraper = (directives, cfg, debugStage = '') => {
     // refine data
     const refinedData = limitedData
         .then(limitedData => {
+            emitter.emit('limitingDone', limitedData);
             log.debug('limited data', limitedData);
 
             return refineData(limitedData);
@@ -49,6 +57,7 @@ const scraper = (directives, cfg, debugStage = '') => {
     // compare to previous data
     const currentData = refinedData
         .then(refinedData => {
+            emitter.emit('refiningDone', refinedData);
             log.debug('refined data', refinedData);
 
             if (typeof cfg.updateStrategy !== 'undefined') {
@@ -65,7 +74,10 @@ const scraper = (directives, cfg, debugStage = '') => {
         return;
     }
 
-    return currentData;
+    return {
+        events: emitter,
+        data: currentData
+    };
 };
 
 export default scraper;

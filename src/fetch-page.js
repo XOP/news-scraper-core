@@ -3,13 +3,14 @@ import Nightmare from 'nightmare';
 
 import log from './utils/log-wrapper.js';
 
-const nightmareOptions = {};
+const scraperOptions = {};
 
-const fetchPage = directive => {
+const fetchPage = (directive, cfgOptions = {}, emitter) => {
+    emitter.emit('scrapingStart', directive.url);
     log.verbose(`Fetching page content from ${directive.url}...`);
     log.debug('directive', directive);
 
-    const nightmare = Nightmare(nightmareOptions); // eslint-disable-line
+    const nightmare = Nightmare(Object.assign({}, scraperOptions, cfgOptions)); // eslint-disable-line
 
     return new Promise((resolve) => nightmare
         .goto(directive.url)
@@ -21,6 +22,7 @@ const fetchPage = directive => {
         }, directive)
         .end()
         .then(data => {
+            emitter.emit('scrapingEnd', data);
             log.verbose(`Fetching page content from ${directive.url} done!`);
             log.info(`${directive.url}: ${data.length} news scraped`);
             log.debug('data', data);
@@ -31,6 +33,7 @@ const fetchPage = directive => {
             return data;
         })
         .catch(err => {
+            emitter.emit('scrapingError', err);
             log.warn(`Oops, something happened: ${err}`);
             log.warn(`${directive.url}: ${err.message}`);
             log.info(`${directive.url}: 0 news scraped`);
