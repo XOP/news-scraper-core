@@ -10,74 +10,102 @@ import log from './utils/log-wrapper.js';
 
 const ScraperEmitter = events.EventEmitter;
 
-const scraper = (directives, cfg, debugStage = '') => {
-    const emitter = new ScraperEmitter();
-
-    // fetch page data
-    const scrapedData = Promise.mapSeries(directives, (directive) => {
-        return fetchPage(directive, cfg.scraperOptions, emitter);
-    });
-
-    if (debugStage === 'data') {
-        return;
+class Scraper {
+    constructor (directives, cfg, state = 'process') {
+        this.directives = directives;
+        this.cfg = cfg;
+        this.emitter = new ScraperEmitter();
+        this._state = state;
     }
 
-    // limit data
-    const limitedData = scrapedData
-        .then(scrapedData => {
-            emitter.emit('scrapingDone', scrapedData);
-            log.debug('scraped data', scrapedData);
-
-            return limitData(scrapedData, cfg.limit);
-        })
-        .catch(err => {
-            log.error(err);
-        });
-
-    if (debugStage === 'limit') {
-        return;
+    get state () {
+        return this._state;
     }
 
-    // refine data
-    const refinedData = limitedData
-        .then(limitedData => {
-            emitter.emit('limitingDone', limitedData);
-            log.debug('limited data', limitedData);
-
-            return refineData(limitedData);
-        })
-        .catch(err => {
-            log.error(err);
-        });
-
-    if (debugStage === 'refine') {
-        return;
+    set state (newState) {
+        this._state = newState;
     }
 
-    // compare to previous data
-    const currentData = refinedData
-        .then(refinedData => {
-            emitter.emit('refiningDone', refinedData);
-            log.debug('refined data', refinedData);
+    get events () {
+        return this.emitter;
+    }
 
-            if (typeof cfg.updateStrategy !== 'undefined') {
-                return compareData(refinedData, cfg.output.path, cfg.output.current, cfg.updateStrategy);
+    get data () {
+        const _this = this;
+        const cfg = _this.cfg;
+        const directives = _this.directives;
+        const emitter = _this.emitter;
+        const state = _this.state;
+
+        // fetch page data
+        const scrapedData = Promise.mapSeries(directives, (directive) => {
+            const state = _this.state;
+
+            if (state === 'abort') {
+                return new Promise.resolve(Object.assign(directive, { data: [] })); // eslint-disable-line
             } else {
-                return refinedData;
+                return fetchPage(directive, cfg.scraperOptions, emitter);
             }
-        })
-        .catch(err => {
-            log.error(err);
         });
 
-    if (debugStage === 'compare') {
-        return;
+        if (state === 'data') {
+            return scrapedData;
+        }
+
+        // limit data
+        const limitedData = scrapedData
+            .then(scrapedData => {
+                emitter.emit('scrapingDone', scrapedData);
+                log.debug('scraped data', scrapedData);
+
+                return limitData(scrapedData, cfg.limit);
+            })
+            .catch(err => {
+                log.error(err);
+            });
+
+        if (state === 'limit') {
+            return limitedData;
+        }
+
+        // refine data
+        const refinedData = limitedData
+            .then(limitedData => {
+                emitter.emit('limitingDone', limitedData);
+                log.debug('limited data', limitedData);
+
+                return refineData(limitedData);
+            })
+            .catch(err => {
+                log.error(err);
+            });
+
+        if (state === 'refine') {
+            return refinedData;
+        }
+
+        // compare to previous data
+        const currentData = refinedData
+            .then(refinedData => {
+                emitter.emit('refiningDone', refinedData);
+                log.debug('refined data', refinedData);
+
+                if (typeof cfg.updateStrategy !== 'undefined') {
+                    return compareData(refinedData, cfg.output.path, cfg.output.current, cfg.updateStrategy);
+                } else {
+                    return refinedData;
+                }
+            })
+            .catch(err => {
+                log.error(err);
+            });
+
+        if (state === 'compare') {
+            return currentData;
+        }
+
+        return currentData;
     }
+}
 
-    return {
-        events: emitter,
-        data: currentData
-    };
-};
-
-export default scraper;
+export default Scraper;
